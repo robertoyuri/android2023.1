@@ -41,6 +41,34 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+                    String NOTIFICATION_CHANEL_ID = "my_chanel_id_01";
+                    NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANEL_ID,"my notification" ,NotificationManager.IMPORTANCE_HIGH);
+                    notificationChannel.setDescription("Minha primeira Notificação");
+                    notificationChannel.setLightColor(Color.RED);
+                    notificationChannel.enableLights(true);
+                    notificationChannel.setVibrationPattern(new long[]{0,1000,500,1000});
+                    notificationChannel.enableVibration(true);
+                    notificationManager.createNotificationChannel(notificationChannel);
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                            getApplicationContext(), NOTIFICATION_CHANEL_ID)
+                            .setContentTitle("Minha primeira notificação")
+                            .setContentText("Minha notificaçãozinha")
+                            .setSmallIcon(R.drawable.ic_launcher_background)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                            .setContentIntent(pendingIntent)
+                            .setAutoCancel(true);
+
+                    notificationManager.notify(001, builder.build());
+                }
             }
         });
     }
